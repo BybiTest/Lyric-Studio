@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Build
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.*
@@ -76,6 +77,11 @@ fun VoiceScreen(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         hasAudioPermission = isGranted
+        if (isGranted) {
+            Toast.makeText(context, "دسترسی میکروفون با موفقیت تأیید شد", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "دسترسی به میکروفون برای ضبط صدا الزامی است", Toast.LENGTH_LONG).show()
+        }
     }
 
     // Recording duration timer
@@ -90,15 +96,34 @@ fun VoiceScreen(
     }
 
     fun startRecording() {
+        val hasPerm = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+        if (!hasPerm) {
+            hasAudioPermission = false
+            permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+            return
+        }
+        hasAudioPermission = true
+
         try {
+            try {
+                mediaRecorder?.reset()
+                mediaRecorder?.release()
+            } catch (_: Exception) {}
+            mediaRecorder = null
+
             val dir = File(context.filesDir, "voice_memos")
             if (!dir.exists()) dir.mkdirs()
             val file = File(dir, "memo_${System.currentTimeMillis()}.m4a")
             currentOutputFile = file
 
-            val recorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                MediaRecorder(context)
-            } else {
+            val recorder = try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    MediaRecorder(context)
+                } else {
+                    @Suppress("DEPRECATION")
+                    MediaRecorder()
+                }
+            } catch (_: Exception) {
                 @Suppress("DEPRECATION")
                 MediaRecorder()
             }
@@ -107,55 +132,91 @@ fun VoiceScreen(
                 setAudioSource(MediaRecorder.AudioSource.MIC)
                 setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
                 setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+                setAudioEncodingBitRate(128000)
+                setAudioSamplingRate(44100)
                 setOutputFile(file.absolutePath)
                 prepare()
                 start()
             }
             mediaRecorder = recorder
             isRecording = true
+            recordingDurationSeconds = 0
+            Toast.makeText(context, "ضبط صدا آغاز شد...", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             e.printStackTrace()
             isRecording = false
+            try {
+                mediaRecorder?.release()
+            } catch (_: Exception) {}
+            mediaRecorder = null
+            Toast.makeText(context, "خطا در شروع ضبط صدا: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
     fun stopRecording() {
-        try {
-            mediaRecorder?.apply {
-                stop()
-                release()
-            }
-            mediaRecorder = null
-            isRecording = false
+        val recorder = mediaRecorder
+        val file = currentOutputFile
+        val durationSecs = recordingDurationSeconds
 
-            val file = currentOutputFile
-            if (file != null && file.exists()) {
-                val now = System.currentTimeMillis()
-                val dateStr = SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault()).format(Date(now))
-                scope.launch {
-                    repo.saveVoiceMemo(
-                        VoiceMemoEntity(
-                            title = "یادداشت صوتی $dateStr",
-                            filePath = file.absolutePath,
-                            durationMs = recordingDurationSeconds * 1000L,
-                            createdAt = now
-                        )
-                    )
+        try {
+            recorder?.let {
+                try {
+                    it.stop()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    try {
+                        it.reset()
+                        it.release()
+                    } catch (_: Exception) {}
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        } finally {
+            mediaRecorder = null
             isRecording = false
+        }
+
+        if (file != null && file.exists() && file.length() > 0) {
+            val now = System.currentTimeMillis()
+            val dateStr = SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault()).format(Date(now))
+            val finalDuration = if (durationSecs > 0) durationSecs * 1000L else 1000L
+            scope.launch {
+                repo.saveVoiceMemo(
+                    VoiceMemoEntity(
+                        title = "یادداشت صوتی $dateStr",
+                        filePath = file.absolutePath,
+                        durationMs = finalDuration,
+                        createdAt = now
+                    )
+                )
+            }
+            Toast.makeText(context, "یادداشت صوتی با موفقیت ذخیره شد", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "مدت زمان ضبط بسیار کوتاه بود یا صدایی دریافت نشد", Toast.LENGTH_SHORT).show()
         }
     }
 
     fun playMemo(memo: VoiceMemoEntity) {
         try {
-            mediaPlayer?.stop()
-            mediaPlayer?.release()
+            try {
+                if (mediaPlayer?.isPlaying == true) {
+                    mediaPlayer?.stop()
+                }
+                mediaPlayer?.reset()
+                mediaPlayer?.release()
+            } catch (_: Exception) {}
             mediaPlayer = null
 
             if (currentPlayingId == memo.id) {
+                currentPlayingId = null
+                return
+            }
+
+            val file = File(memo.filePath)
+            if (!file.exists() || file.length() == 0L) {
+                Toast.makeText(context, "فایل صوتی در حافظه دستگاه یافت نشد", Toast.LENGTH_SHORT).show()
                 currentPlayingId = null
                 return
             }
@@ -173,11 +234,15 @@ fun VoiceScreen(
         } catch (e: Exception) {
             e.printStackTrace()
             currentPlayingId = null
+            Toast.makeText(context, "خطا در پخش فایل صوتی: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
     DisposableEffect(Unit) {
         onDispose {
+            try {
+                mediaRecorder?.stop()
+            } catch (_: Exception) {}
             try {
                 mediaRecorder?.release()
                 mediaPlayer?.release()

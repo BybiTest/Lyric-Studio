@@ -54,11 +54,10 @@ fun SettingsScreen(
     val currentLang by prefs.languageFlow.collectAsState(initial = "fa")
     val fontSize by prefs.fontSizeFlow.collectAsState(initial = 16f)
     val lineHeight by prefs.lineHeightFlow.collectAsState(initial = 1.5f)
-    val isAppLockEnabled by prefs.appLockEnabledFlow.collectAsState(initial = prefs.isAppLockEnabledSync())
+    val isAppLockEnabled by prefs.appLockEnabled.collectAsState(initial = false)
 
     var showSetPinDialog by remember { mutableStateOf(false) }
     var newPinText by remember { mutableStateOf("") }
-    var confirmPinText by remember { mutableStateOf("") }
     var setPinError by remember { mutableStateOf<String?>(null) }
 
     var showDisablePinDialog by remember { mutableStateOf(false) }
@@ -239,7 +238,6 @@ fun SettingsScreen(
                             onCheckedChange = { enabled ->
                                 if (enabled) {
                                     newPinText = ""
-                                    confirmPinText = ""
                                     setPinError = null
                                     showSetPinDialog = true
                                 } else {
@@ -338,21 +336,7 @@ fun SettingsScreen(
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    OutlinedTextField(
-                        value = confirmPinText,
-                        onValueChange = {
-                            val filtered = it.filter { c -> c.isDigit() }
-                            if (filtered.length <= 6) {
-                                confirmPinText = filtered
-                                setPinError = null
-                            }
-                        },
-                        label = { Text("تکرار رمز") },
-                        singleLine = true,
-                        visualTransformation = PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                        isError = setPinError != null,
                         modifier = Modifier.fillMaxWidth()
                     )
                     if (setPinError != null) {
@@ -367,20 +351,16 @@ fun SettingsScreen(
             confirmButton = {
                 Button(
                     onClick = {
-                        if (newPinText.length !in 4..6) {
-                            setPinError = "طول رمز باید بین ۴ تا ۶ رقم باشد"
-                        } else if (newPinText != confirmPinText) {
-                            setPinError = "تکرار رمز با رمز اصلی مطابقت ندارد"
-                        } else {
+                        if (newPinText.length in 4..6) {
                             scope.launch {
                                 prefs.setAppLockPin(newPinText)
-                                prefs.setAppLockEnabled(true)
                                 Toast.makeText(context, "قفل برنامه با موفقیت فعال شد", Toast.LENGTH_SHORT).show()
                             }
                             showSetPinDialog = false
                             newPinText = ""
-                            confirmPinText = ""
                             setPinError = null
+                        } else {
+                            setPinError = "طول رمز باید بین ۴ تا ۶ رقم باشد"
                         }
                     }
                 ) {
@@ -436,7 +416,7 @@ fun SettingsScreen(
                 Button(
                     onClick = {
                         scope.launch {
-                            val isCorrect = prefs.verifyPin(disablePinInput) || prefs.verifyPinAsync(disablePinInput)
+                            val isCorrect = prefs.verifyPin(disablePinInput)
                             if (isCorrect) {
                                 prefs.setAppLockEnabled(false)
                                 showDisablePinDialog = false

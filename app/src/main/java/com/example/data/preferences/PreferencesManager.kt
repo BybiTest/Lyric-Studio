@@ -1,18 +1,23 @@
 package com.example.data.preferences
 
 import android.content.Context
+import android.util.Base64
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException
+import java.security.MessageDigest
+import java.security.SecureRandom
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "lyric_studio_prefs")
 
 class PreferencesManager(private val context: Context) {
+
+    private val dataStore = context.dataStore
 
     init {
         try {
@@ -31,13 +36,13 @@ class PreferencesManager(private val context: Context) {
         val KEY_LETTER_SPACING = floatPreferencesKey("letter_spacing")
         val KEY_AUTOSAVE_ENABLED = booleanPreferencesKey("autosave_enabled")
         val KEY_AUTOSAVE_DEBOUNCE_MS = longPreferencesKey("autosave_debounce_ms")
-        val KEY_APP_LOCK_ENABLED = booleanPreferencesKey("app_lock_enabled")
-        val KEY_PIN_HASH = stringPreferencesKey("app_lock_pin_hash")
+        private val APP_LOCK_ENABLED = booleanPreferencesKey("app_lock_enabled")
+        private val APP_LOCK_PIN_HASH = stringPreferencesKey("app_lock_pin_hash")
+        private val APP_LOCK_PIN_SALT = stringPreferencesKey("app_lock_pin_salt")
         val KEY_GRID_VIEW = booleanPreferencesKey("grid_view_enabled")
-        private const val SALT = "LyricStudio_Secure_Salt_2026"
     }
 
-    val themeFlow: Flow<String> = context.dataStore.data
+    val themeFlow: Flow<String> = dataStore.data
         .catch { exception ->
             if (exception is IOException) emit(emptyPreferences()) else throw exception
         }
@@ -45,7 +50,7 @@ class PreferencesManager(private val context: Context) {
             preferences[KEY_THEME] ?: "midnight"
         }
 
-    val languageFlow: Flow<String> = context.dataStore.data
+    val languageFlow: Flow<String> = dataStore.data
         .catch { exception ->
             if (exception is IOException) emit(emptyPreferences()) else throw exception
         }
@@ -53,7 +58,7 @@ class PreferencesManager(private val context: Context) {
             preferences[KEY_LANGUAGE] ?: "fa"
         }
 
-    val fontSizeFlow: Flow<Float> = context.dataStore.data
+    val fontSizeFlow: Flow<Float> = dataStore.data
         .catch { exception ->
             if (exception is IOException) emit(emptyPreferences()) else throw exception
         }
@@ -61,7 +66,7 @@ class PreferencesManager(private val context: Context) {
             preferences[KEY_FONT_SIZE] ?: 16f
         }
 
-    val lineHeightFlow: Flow<Float> = context.dataStore.data
+    val lineHeightFlow: Flow<Float> = dataStore.data
         .catch { exception ->
             if (exception is IOException) emit(emptyPreferences()) else throw exception
         }
@@ -69,7 +74,7 @@ class PreferencesManager(private val context: Context) {
             preferences[KEY_LINE_HEIGHT] ?: 1.5f
         }
 
-    val letterSpacingFlow: Flow<Float> = context.dataStore.data
+    val letterSpacingFlow: Flow<Float> = dataStore.data
         .catch { exception ->
             if (exception is IOException) emit(emptyPreferences()) else throw exception
         }
@@ -77,7 +82,7 @@ class PreferencesManager(private val context: Context) {
             preferences[KEY_LETTER_SPACING] ?: 0f
         }
 
-    val autosaveEnabledFlow: Flow<Boolean> = context.dataStore.data
+    val autosaveEnabledFlow: Flow<Boolean> = dataStore.data
         .catch { exception ->
             if (exception is IOException) emit(emptyPreferences()) else throw exception
         }
@@ -85,7 +90,7 @@ class PreferencesManager(private val context: Context) {
             preferences[KEY_AUTOSAVE_ENABLED] ?: true
         }
 
-    val autosaveDebounceMsFlow: Flow<Long> = context.dataStore.data
+    val autosaveDebounceMsFlow: Flow<Long> = dataStore.data
         .catch { exception ->
             if (exception is IOException) emit(emptyPreferences()) else throw exception
         }
@@ -93,28 +98,27 @@ class PreferencesManager(private val context: Context) {
             preferences[KEY_AUTOSAVE_DEBOUNCE_MS] ?: 600L
         }
 
-    val appLockPinHashFlow: Flow<String?> = context.dataStore.data
+    val appLockEnabled: Flow<Boolean> = dataStore.data
         .catch { exception ->
             if (exception is IOException) emit(emptyPreferences()) else throw exception
         }
-        .map { preferences ->
-            val hash = preferences[KEY_PIN_HASH]
-            if (hash.isNullOrBlank()) null else hash
+        .map { 
+            it[APP_LOCK_ENABLED] ?: false 
         }
 
-    val pinHashFlow: Flow<String> = appLockPinHashFlow.map { it ?: "" }
-
-    val appLockEnabledFlow: Flow<Boolean> = context.dataStore.data
+    val appLockPinHash: Flow<String?> = dataStore.data
         .catch { exception ->
             if (exception is IOException) emit(emptyPreferences()) else throw exception
         }
-        .map { preferences ->
-            val isEnabled = preferences[KEY_APP_LOCK_ENABLED] ?: false
-            val hash = preferences[KEY_PIN_HASH] ?: ""
-            isEnabled && hash.isNotBlank()
+        .map { 
+            it[APP_LOCK_PIN_HASH] 
         }
 
-    val gridViewFlow: Flow<Boolean> = context.dataStore.data
+    val appLockEnabledFlow: Flow<Boolean> get() = appLockEnabled
+    val appLockPinHashFlow: Flow<String?> get() = appLockPinHash
+    val pinHashFlow: Flow<String> get() = appLockPinHash.map { it ?: "" }
+
+    val gridViewFlow: Flow<Boolean> = dataStore.data
         .catch { exception ->
             if (exception is IOException) emit(emptyPreferences()) else throw exception
         }
@@ -122,29 +126,8 @@ class PreferencesManager(private val context: Context) {
             preferences[KEY_GRID_VIEW] ?: false
         }
 
-    fun isAppLockEnabledSync(): Boolean {
-        return try {
-            val sp = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-            val isEnabled = sp.getBoolean("app_lock_enabled", false)
-            val hash = sp.getString("app_lock_pin_hash", null)
-            isEnabled && !hash.isNullOrBlank()
-        } catch (_: Exception) {
-            false
-        }
-    }
-
-    fun getPinHashSync(): String? {
-        return try {
-            val sp = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-            val hash = sp.getString("app_lock_pin_hash", null)
-            if (hash.isNullOrBlank()) null else hash
-        } catch (_: Exception) {
-            null
-        }
-    }
-
     suspend fun setTheme(themeId: String) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[KEY_THEME] = themeId
         }
     }
@@ -156,114 +139,79 @@ class PreferencesManager(private val context: Context) {
                 .putString("language", lang)
                 .apply()
         } catch (_: Exception) {}
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[KEY_LANGUAGE] = lang
         }
     }
 
     suspend fun setFontSize(size: Float) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[KEY_FONT_SIZE] = size
         }
     }
 
     suspend fun setLineHeight(height: Float) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[KEY_LINE_HEIGHT] = height
         }
     }
 
     suspend fun setLetterSpacing(spacing: Float) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[KEY_LETTER_SPACING] = spacing
         }
     }
 
     suspend fun setAutosaveEnabled(enabled: Boolean) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[KEY_AUTOSAVE_ENABLED] = enabled
         }
     }
 
-    suspend fun setAppLockPin(pin: String) {
-        val hash = if (pin.isBlank()) "" else hashPin(pin)
-        val isEnabled = pin.isNotBlank()
-        try {
-            val sp = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-            sp.edit()
-                .putString("app_lock_pin_hash", hash)
-                .putBoolean("app_lock_enabled", isEnabled)
-                .apply()
-        } catch (_: Exception) {}
-        context.dataStore.edit { preferences ->
-            preferences[KEY_PIN_HASH] = hash
-            preferences[KEY_APP_LOCK_ENABLED] = isEnabled
-        }
-    }
-
     suspend fun setAppLockEnabled(enabled: Boolean) {
-        try {
-            val sp = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-            val editor = sp.edit().putBoolean("app_lock_enabled", enabled)
+        dataStore.edit { 
+            it[APP_LOCK_ENABLED] = enabled
             if (!enabled) {
-                editor.remove("app_lock_pin_hash")
-            }
-            editor.apply()
-        } catch (_: Exception) {}
-        context.dataStore.edit { preferences ->
-            preferences[KEY_APP_LOCK_ENABLED] = enabled
-            if (!enabled) {
-                preferences[KEY_PIN_HASH] = ""
+                it.remove(APP_LOCK_PIN_HASH)
+                it.remove(APP_LOCK_PIN_SALT)
             }
         }
     }
 
-    suspend fun setPin(pin: String) {
-        setAppLockPin(pin)
-    }
-
-    fun verifyPin(pin: String): Boolean {
-        val savedHash = getPinHashSync() ?: return false
-        val hashedWithSalt = hashPin(pin)
-        val hashedLegacy = hashPinLegacy(pin)
-        return hashedWithSalt == savedHash || hashedLegacy == savedHash
-    }
-
-    suspend fun verifyPinAsync(pin: String): Boolean {
-        var savedHash = getPinHashSync()
-        if (savedHash == null) {
-            context.dataStore.data.firstOrNull()?.let { prefs ->
-                savedHash = prefs[KEY_PIN_HASH]
-            }
+    suspend fun setAppLockPin(pin: String) {
+        val salt = generateRandomSalt()
+        val hash = hashPin(pin, salt)
+        dataStore.edit { 
+            it[APP_LOCK_PIN_HASH] = hash
+            it[APP_LOCK_PIN_SALT] = salt
+            it[APP_LOCK_ENABLED] = true
         }
-        if (savedHash.isNullOrBlank()) return false
-        return hashPin(pin) == savedHash || hashPinLegacy(pin) == savedHash
+    }
+
+    suspend fun verifyPin(pin: String): Boolean {
+        val prefs = dataStore.data.first()
+        val storedHash = prefs[APP_LOCK_PIN_HASH] ?: return false
+        val salt = prefs[APP_LOCK_PIN_SALT] ?: return false
+        return hashPin(pin, salt) == storedHash
+    }
+
+    private fun hashPin(pin: String, salt: String): String {
+        val md = MessageDigest.getInstance("SHA-256")
+        md.update(salt.toByteArray())
+        val bytes = md.digest(pin.toByteArray())
+        return Base64.encodeToString(bytes, Base64.NO_WRAP)
+    }
+
+    private fun generateRandomSalt(): String {
+        val random = SecureRandom()
+        val bytes = ByteArray(16)
+        random.nextBytes(bytes)
+        return Base64.encodeToString(bytes, Base64.NO_WRAP)
     }
 
     suspend fun setGridView(enabled: Boolean) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[KEY_GRID_VIEW] = enabled
-        }
-    }
-
-    fun hashPin(pin: String, salt: String = SALT): String {
-        return try {
-            val message = "$salt:$pin"
-            val digest = java.security.MessageDigest.getInstance("SHA-256")
-            val hash = digest.digest(message.toByteArray(Charsets.UTF_8))
-            hash.joinToString("") { "%02x".format(it) }
-        } catch (e: Exception) {
-            (pin.hashCode() xor salt.hashCode()).toString()
-        }
-    }
-
-    private fun hashPinLegacy(pin: String): String {
-        return try {
-            val digest = java.security.MessageDigest.getInstance("SHA-256")
-            val hash = digest.digest(pin.toByteArray())
-            hash.joinToString("") { "%02x".format(it) }
-        } catch (e: Exception) {
-            pin.hashCode().toString()
         }
     }
 }

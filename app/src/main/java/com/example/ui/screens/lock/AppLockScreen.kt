@@ -41,7 +41,7 @@ fun AppLockScreen(
             return
         }
         scope.launch {
-            val isCorrect = prefs.verifyPin(enteredPin) || prefs.verifyPinAsync(enteredPin)
+            val isCorrect = prefs.verifyPin(enteredPin)
             if (isCorrect) {
                 errorMessage = null
                 onUnlocked()
@@ -106,8 +106,10 @@ fun AppLockScreen(
                         enteredPin = filtered
                         errorMessage = null
                         if (filtered.length >= 4) {
-                            if (prefs.verifyPin(filtered)) {
-                                onUnlocked()
+                            scope.launch {
+                                if (prefs.verifyPin(filtered)) {
+                                    onUnlocked()
+                                }
                             }
                         }
                     }

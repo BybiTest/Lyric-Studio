@@ -85,9 +85,7 @@ class MainActivity : ComponentActivity() {
             val app = LyricStudioApp.instance
             val themeId by app.preferencesManager.themeFlow.collectAsState(initial = "midnight")
             val currentLang by app.preferencesManager.languageFlow.collectAsState(initial = initialLang)
-            val isAppLockEnabled by app.preferencesManager.appLockEnabledFlow.collectAsState(
-                initial = app.preferencesManager.isAppLockEnabledSync()
-            )
+            val isAppLockEnabled by app.preferencesManager.appLockEnabled.collectAsState(initial = false)
             val studioTheme = remember(themeId) { StudioTheme.fromId(themeId) }
 
             LaunchedEffect(currentLang) {
