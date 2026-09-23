@@ -1,0 +1,276 @@
+<resources>
+    <string name="app_name">استودیو ترانه</string>
+    <string name="creator_name">سیدحمید موسوی زاده</string>
+    <string name="app_version">1.0.0</string>
+    <string name="splash_subtitle">استودیو حرفه‌ای و آفلاین ترانه‌سرایی</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">خانه</string>
+    <string name="nav_projects">پروژه‌ها</string>
+    <string name="nav_ideas">ایده‌ها</string>
+    <string name="nav_tools">ابزارها</string>
+    <string name="nav_settings">تنظیمات</string>
+
+    <!-- Home -->
+    <string name="greeting_morning">صبح بخیر</string>
+    <string name="greeting_afternoon">وقت بخیر</string>
+    <string name="greeting_evening">عصر بخیر</string>
+    <string name="greeting_night">شب بخیر</string>
+    <string name="home_last_project">آخرین پروژه</string>
+    <string name="home_continue_writing">ادامه نوشتن</string>
+    <string name="home_quick_actions">اقدامات سریع</string>
+    <string name="home_new_project">پروژه جدید</string>
+    <string name="home_quick_writing">نوشتن سریع</string>
+    <string name="home_new_idea">ایده جدید</string>
+    <string name="home_new_voice">یادداشت صوتی</string>
+    <string name="home_recent_projects">پروژه‌های اخیر</string>
+    <string name="home_recent_ideas">ایده‌های اخیر</string>
+    <string name="home_stats">آمار استودیو</string>
+    <string name="home_total_projects">پروژه‌ها</string>
+    <string name="home_total_words">کلمات</string>
+    <string name="home_current_streak">استریک فعلی</string>
+    <string name="days">روز</string>
+    <string name="words">کلمه</string>
+    <string name="lines">خط</string>
+
+    <!-- Project Status - بند ۸ برچسب‌های دقیق -->
+    <string name="status_idea">ایده</string>
+    <string name="status_writing">در حال نوشتن</string>
+    <string name="status_editing">در حال ویرایش</string>
+    <string name="status_ready">آماده</string>
+    <string name="status_completed">تکمیل‌شده</string>
+    <string name="status_archived">بایگانی‌شده</string>
+
+    <!-- Projects Screen -->
+    <string name="projects_title">پروژه‌ها</string>
+    <string name="search_placeholder">جستجو در ترانه‌ها، یادداشت‌ها، برچسب‌ها...</string>
+    <string name="filter_all">همه</string>
+    <string name="sort_by">مرتب‌سازی بر اساس</string>
+    <string name="sort_date_desc">جدیدترین ویرایش</string>
+    <string name="sort_date_asc">قدیمی‌ترین</string>
+    <string name="sort_title">عنوان پروژه</string>
+    <string name="sort_word_count">تعداد کلمات</string>
+    <string name="view_grid">نمای شبکه‌ای</string>
+    <string name="view_list">نمای فهرستی</string>
+    <string name="no_projects_title">هنوز پروژه‌ای ثبت نشده است</string>
+    <string name="no_projects_desc">استودیوی ترانه‌سرایی خود را با تعریف اولین پروژه آغاز نمایید</string>
+    <string name="create_project">ایجاد پروژه جدید</string>
+    <string name="project_title_hint">عنوان ترانه یا پروژه</string>
+    <string name="genre_hint">سبک / ژانر (مثلاً رپ، پاپ، راک، شعر کلاسیک)</string>
+    <string name="subgenre_hint">زیرژانر / زیرسبک</string>
+    <string name="topic_hint">موضوع یا داستان ترانه</string>
+    <string name="mood_hint">حال و هوا (Mood)</string>
+    <string name="key_hint">گام موسیقی (مثلاً Am, C, Dm)</string>
+    <string name="bpm_hint">تمپو (BPM)</string>
+
+    <!-- Editor Screen -->
+    <string name="editor_focus_mode">حالت تمرکز</string>
+    <string name="editor_exit_focus">خروج از تمرکز</string>
+    <string name="editor_add_section">افزودن بخش</string>
+    <string name="editor_custom_section">بخش سفارشی</string>
+    <string name="editor_section_name">نام بخش</string>
+    <string name="editor_bpm">تمپو (BPM)</string>
+    <string name="editor_key">گام</string>
+    <string name="editor_auto_saved">ذخیره شد</string>
+    <string name="editor_saving">در حال ذخیره...</string>
+    <string name="editor_word_count_format">%1$d کلمه • %2$d خط</string>
+    <string name="editor_export">خروجی ترانه</string>
+    <string name="editor_versions">تاریخچه نسخه‌ها</string>
+    <string name="editor_tools_shortcut">ابزارها</string>
+    <string name="section_type_intro">مقدمه (Intro)</string>
+    <string name="section_type_verse">بند اصلی (Verse)</string>
+    <string name="section_type_chorus">ترجیع‌بند (Chorus)</string>
+    <string name="section_type_hook">قلاب / هوک (Hook)</string>
+    <string name="section_type_pre_chorus">پیش‌ترجیع‌بند (Pre-Chorus)</string>
+    <string name="section_type_bridge">پل ملودی (Bridge)</string>
+    <string name="section_type_outro">پایان (Outro)</string>
+    <string name="section_type_poem">بیت / شعر (Poem)</string>
+    <string name="section_type_text">متن آزاد (Text)</string>
+    <string name="section_type_note">یادداشت فنی (Note)</string>
+    <string name="section_type_idea">ایده (Idea)</string>
+    <string name="section_type_custom">بخش سفارشی</string>
+
+    <!-- Quick Writing -->
+    <string name="quick_writing_title">نوشتن سریع</string>
+    <string name="quick_writing_hint">بدون اتلاف وقت و ساخت پروژه، اینجا کلمات و ابیات را جاری کنید...</string>
+    <string name="convert_to_project">تبدیل به پروژه</string>
+    <string name="clear">پاکسازی</string>
+
+    <!-- Ideas Screen -->
+    <string name="ideas_title">گنجینه ایده‌ها</string>
+    <string name="no_ideas_title">هنوز ایده‌ای ثبت نشده است</string>
+    <string name="no_ideas_desc">جرقه الهامات ناگهانی و ریتم‌های نو را اینجا ثبت کنید</string>
+    <string name="add_idea">ثبت ایده جدید</string>
+    <string name="idea_title_hint">موضوع یا عنوان ایده</string>
+    <string name="idea_content_hint">متن ایده، ملودی زمزمه‌شده یا خطوط آغازین...</string>
+    <string name="category_hint">دسته‌بندی ایده</string>
+
+    <!-- Punchlines Screen -->
+    <string name="punchlines_title">گنجینه پانچ‌لاین‌ها</string>
+    <string name="no_punchlines_title">هیچ پانچ‌لاینی ثبت نشده است</string>
+    <string name="no_punchlines_desc">بیت‌های کوبنده، تشبیه‌ها و جملات طلایی خود را محفوظ نگه دارید</string>
+    <string name="add_punchline">افزودن پانچ‌لاین</string>
+    <string name="punchline_hint">بیت سنگین، ایهام، آرایه ادبی یا قافیه کوبنده...</string>
+    <string name="copy_to_clipboard">کپی در حافظه</string>
+    <string name="copied">با موفقیت کپی شد!</string>
+    <string name="insert_to_project">درج در ترانه باز</string>
+
+    <!-- Word Bank Screen -->
+    <string name="word_bank_title">بانک واژگان</string>
+    <string name="no_words_title">بانک واژگان خالی است</string>
+    <string name="no_words_desc">کلمات گوش‌نواز، ترکیب‌های خاص و واژگان غنی را اینجا ذخیره کنید</string>
+    <string name="add_word">افزودن واژه</string>
+    <string name="word_hint">واژه یا عبارت</string>
+    <string name="meaning_hint">معنا یا کاربرد در ترانه</string>
+
+    <!-- Tools Hub Screen -->
+    <string name="tools_title">استودیو ابزارها</string>
+    <string name="cat_music">موسیقی و ریتم</string>
+    <string name="cat_writing">نوشتن و واژگان</string>
+    <string name="cat_audio">صدا و ضبط استودیویی</string>
+    <string name="cat_ideas">ایده‌ها و الهام</string>
+    <string name="tool_metronome">مترونوم و تپ تمپو</string>
+    <string name="tool_rhyme">قافیه‌یاب آفلاین</string>
+    <string name="tool_voice">یادداشت صوتی</string>
+    <string name="tool_punchlines">گنجینه پانچ‌لاین</string>
+    <string name="tool_wordbank">بانک واژگان</string>
+    <string name="tool_templates">قالب‌های ساختار ترانه</string>
+    <string name="tool_goals">اهداف ترانه‌سرایی</string>
+    <string name="tool_streak">استریک و تقویم فعالیت</string>
+
+    <!-- Metronome -->
+    <string name="metronome_title">مترونوم استودیو</string>
+    <string name="metronome_tap_tempo">محاسبه ضربه (Tap)</string>
+    <string name="metronome_start">شروع ضرب‌آهنگ</string>
+    <string name="metronome_stop">توقف</string>
+
+    <!-- Voice Memos -->
+    <string name="voice_memos_title">یادداشت‌های صوتی</string>
+    <string name="record_audio">ضبط ملودی و زمزمه</string>
+    <string name="recording">در حال ضبط صدا...</string>
+    <string name="stop_recording">توقف و ذخیره</string>
+    <string name="no_voice_memos">هنوز صدای ضبط‌شده‌ای وجود ندارد</string>
+    <string name="permission_needed_audio">مجوز دسترسی به میکروفون جهت ضبط زمزمه و ملودی الزامی است.</string>
+    <string name="grant_permission">اعطای مجوز میکروفون</string>
+
+    <!-- Rhyme Finder -->
+    <string name="rhyme_title">قافیه‌یاب آفلاین</string>
+    <string name="rhyme_search_hint">واژه مورد نظر را بنویسید (مثلاً باران، بهار، ماه)...</string>
+    <string name="rhyme_search_btn">یافتن قافیه‌ها</string>
+    <string name="no_rhymes_found">قافیه هم‌پوشانی یافت نشد</string>
+
+    <!-- Templates -->
+    <string name="templates_title">قالب‌های ترانه</string>
+    <string name="template_rap">قالب رپ و هیپ‌هاپ (ورود، ورس ۱۶ بیتی، هوک، خروج)</string>
+    <string name="template_pop">قالب پاپ (ورس، پیش‌ترجیع، کورس، بریج)</string>
+    <string name="template_rnb">قالب آر اند بی (کورس ملایم، ورس احساسی، بریج)</string>
+    <string name="template_poetry">قالب شعر سنتی و نو (بندها و ابیات متناوب)</string>
+    <string name="template_freestyle">قالب فری‌استایل (جریان کلمات پیوسته)</string>
+    <string name="apply_template">اعمال قالب در پروژه جدید</string>
+
+    <!-- Goals & Streak -->
+    <string name="goals_title">اهداف نوشتاری</string>
+    <string name="streak_title">استریک پیوستگی نوشتن</string>
+    <string name="calendar_title">تقویم فعالیت استودیو</string>
+    <string name="current_streak_label">استریک پیوسته فعلی</string>
+    <string name="best_streak_label">طولانی‌ترین استریک</string>
+    <string name="words_goal">هدف کلمات روزانه</string>
+    <string name="lines_goal">هدف ابیات روزانه</string>
+    <string name="projects_goal">هدف پروژه‌های ماهانه</string>
+
+    <!-- Version History -->
+    <string name="version_history_title">تاریخچه نسخه‌ها</string>
+    <string name="no_versions">هنوز نسخه ذخیره‌شده‌ای ثبت نشده است</string>
+    <string name="create_version_snapshot">ثبت نسخه جدید (Snapshot)</string>
+    <string name="restore_version">بازیابی این نسخه</string>
+
+    <!-- Trash -->
+    <string name="trash_title">سطل زباله</string>
+    <string name="trash_empty_btn">خالی کردن سطل</string>
+    <string name="empty_trash">خالی کردن سطل</string>
+    <string name="trash_restore">بازیابی به پروژه‌ها</string>
+    <string name="restore_project">بازیابی به پروژه‌ها</string>
+    <string name="trash_delete_permanent">حذف همیشگی</string>
+    <string name="delete_permanently">حذف همیشگی</string>
+    <string name="no_trash_items">سطل زباله خالی است</string>
+
+    <!-- Settings -->
+    <string name="settings_title">تنظیمات استودیو</string>
+    <string name="settings_appearance">ظاهر و پوسته</string>
+    <string name="settings_theme">تم استودیو</string>
+    <string name="settings_language">زبان برنامه (Language)</string>
+    <string name="settings_editor">تنظیمات ویرایشگر</string>
+    <string name="settings_typography">تنظیمات قلم و تایپوگرافی</string>
+    <string name="font_size">اندازه قلم</string>
+    <string name="line_height">فاصله بین خطوط</string>
+    <string name="settings_font_size">اندازه قلم</string>
+    <string name="settings_line_height">فاصله بین خطوط</string>
+    <string name="settings_letter_spacing">فاصله بین حروف</string>
+    <string name="settings_autosave">ذخیره خودکار (Autosave)</string>
+    <string name="settings_security">امنیت و قفل برنامه</string>
+    <string name="settings_app_lock">قفل با کد PIN</string>
+    <string name="lock_title">قفل برنامه</string>
+    <string name="lock_enter_pin">رمز عبور خود را وارد کنید</string>
+    <string name="lock_unlock">بازگشایی استودیو</string>
+    <string name="lock_set_pin">تعریف رمز امنیتی</string>
+    <string name="editor_continue_writing">ادامه نوشتن ترانه</string>
+    <string name="settings_private_vault">گاوصندوق خصوصی ترانه‌ها</string>
+    <string name="settings_backup">پشتیبان‌گیری و داده‌ها</string>
+    <string name="settings_backup_create">پشتیبان‌گیری کامل (JSON)</string>
+    <string name="settings_backup_restore">بازیابی از فایل پشتیبان</string>
+    <string name="settings_trash">سطل زباله</string>
+    <string name="settings_about">درباره استودیو ترانه</string>
+    <string name="about_desc">یک استودیوی لوکس، کاملاً آفلاین، امن و بدون حواس‌پرتی برای ترانه‌سرایان، طراحی شده توسط سیدحمید موسوی زاده.</string>
+
+    <!-- Themes -->
+    <string name="theme_midnight">مشکی متالیک (Midnight Metallic)</string>
+    <string name="theme_purple">شب بنفش (Purple Night)</string>
+    <string name="theme_ocean">اقیانوس عمیق (Deep Ocean)</string>
+    <string name="theme_emerald">زمردی (Emerald)</string>
+    <string name="theme_crimson">یاقوتی (Crimson)</string>
+    <string name="theme_golden">زرین لوکس (Golden)</string>
+    <string name="theme_neon">نئون کنترل‌شده (Neon)</string>
+    <string name="theme_light">استودیوی روشن (Light Studio)</string>
+    <string name="theme_charcoal_gold">زرین لوکس (Charcoal Gold)</string>
+    <string name="theme_cyan">اقیانوس عمیق (Deep Space Cyan)</string>
+    <string name="theme_slate">تخته‌سنگ مینیمال (Slate Minimal)</string>
+    <string name="theme_amber">کهربایی سایبرپانک (Cyberpunk Amber)</string>
+    <string name="theme_oled">سیاه خالص اولد (Pure Black OLED)</string>
+
+    <!-- Dialogs & Actions -->
+    <string name="confirm">تأیید</string>
+    <string name="cancel">انصراف</string>
+    <string name="save">ذخیره</string>
+    <string name="delete">حذف</string>
+    <string name="warning">هشدار</string>
+    <string name="confirm_delete_project">آیا از انتقال این پروژه به سطل زباله اطمینان دارید؟</string>
+    <string name="confirm_empty_trash">تمامی اطلاعات سطل زباله برای همیشه پاک خواهد شد. ادامه می‌دهید؟</string>
+    <string name="confirm_restore_backup">اطلاعات فعلی با داده‌های فایل پشتیبان بازنویسی خواهد شد. مطمئن هستید؟</string>
+    <string name="enter_pin">کد ۴ رقمی PIN را وارد کنید</string>
+    <string name="set_pin">تعریف رمز جدید PIN</string>
+    <string name="incorrect_pin">رمز عبور نادرست است. دوباره تلاش کنید.</string>
+    <string name="pin_saved">رمز عبور با موفقیت ذخیره شد.</string>
+    <string name="vault_locked">گاوصندوق قفل است</string>
+    <string name="unlock">بازگشایی قفل</string>
+
+    <!-- Content Descriptions (Bilingual Accessibility) -->
+    <string name="cd_back">بازگشت به صفحه قبل</string>
+    <string name="cd_close">بستن پنجره</string>
+    <string name="cd_menu">منوی گزینه‌ها</string>
+    <string name="cd_search">جستجوی موارد</string>
+    <string name="cd_filter">فیلتر کردن فهرست</string>
+    <string name="cd_sort">مرتب‌سازی موارد</string>
+    <string name="cd_add">افزودن مورد جدید</string>
+    <string name="cd_delete">حذف مورد</string>
+    <string name="cd_edit">ویرایش اطلاعات</string>
+    <string name="cd_favorite">نشان‌کردن به عنوان برگزیده</string>
+    <string name="cd_share">اشتراک‌گذاری متن ترانه</string>
+    <string name="cd_play">پخش صدا</string>
+    <string name="cd_pause">مکث صدا</string>
+    <string name="cd_stop">توقف</string>
+    <string name="cd_record">شروع ضبط صدا</string>
+    <string name="cd_focus_mode">ورود به حالت تمرکز بدون حاشیه</string>
+    <string name="cd_exit_focus">خروج از حالت تمرکز</string>
+    <string name="cd_app_icon">آیکون اپلیکیشن استودیو ترانه</string>
+    <string name="cd_toggle_grid">تغییر حالت نمایش شبکه‌ای و فهرستی</string>
+</resources>

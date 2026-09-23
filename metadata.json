@@ -1,0 +1,6 @@
+{
+  "name": "Lyric Studio",
+  "description": "استودیو حرفه‌ای و کاملاً آفلاین ترانه‌سرایی، مدیریت پروژه‌ها، ریتم، مترونوم، قافیه‌یاب و ضبط یادداشت‌های صوتی",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

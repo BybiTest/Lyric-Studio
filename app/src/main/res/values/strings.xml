@@ -1,0 +1,276 @@
+<resources>
+    <string name="app_name">Lyric Studio</string>
+    <string name="creator_name">Seyed Hamid Mousavizadeh</string>
+    <string name="app_version">1.0.0</string>
+    <string name="splash_subtitle">Professional Offline Lyric Studio</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_projects">Projects</string>
+    <string name="nav_ideas">Ideas</string>
+    <string name="nav_tools">Tools</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Home -->
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="greeting_night">Good night</string>
+    <string name="home_last_project">Last Project</string>
+    <string name="home_continue_writing">Continue Writing</string>
+    <string name="home_quick_actions">Quick Actions</string>
+    <string name="home_new_project">New Project</string>
+    <string name="home_quick_writing">Quick Write</string>
+    <string name="home_new_idea">New Idea</string>
+    <string name="home_new_voice">Voice Memo</string>
+    <string name="home_recent_projects">Recent Projects</string>
+    <string name="home_recent_ideas">Recent Ideas</string>
+    <string name="home_stats">Studio Stats</string>
+    <string name="home_total_projects">Projects</string>
+    <string name="home_total_words">Words</string>
+    <string name="home_current_streak">Current Streak</string>
+    <string name="days">Days</string>
+    <string name="words">Words</string>
+    <string name="lines">Lines</string>
+
+    <!-- Project Status -->
+    <string name="status_idea">Idea</string>
+    <string name="status_writing">Writing</string>
+    <string name="status_editing">Editing</string>
+    <string name="status_ready">Ready</string>
+    <string name="status_completed">Completed</string>
+    <string name="status_archived">Archived</string>
+
+    <!-- Projects Screen -->
+    <string name="projects_title">Projects</string>
+    <string name="search_placeholder">Search lyrics, ideas, words...</string>
+    <string name="filter_all">All</string>
+    <string name="sort_by">Sort by</string>
+    <string name="sort_date_desc">Recently Edited</string>
+    <string name="sort_date_asc">Oldest</string>
+    <string name="sort_title">Title</string>
+    <string name="sort_word_count">Word Count</string>
+    <string name="view_grid">Grid</string>
+    <string name="view_list">List</string>
+    <string name="no_projects_title">No projects yet</string>
+    <string name="no_projects_desc">Start your songwriting journey by creating your first project</string>
+    <string name="create_project">Create Project</string>
+    <string name="project_title_hint">Project Title</string>
+    <string name="genre_hint">Genre (e.g. Rap, Pop, Rock, Poetry)</string>
+    <string name="subgenre_hint">Subgenre</string>
+    <string name="topic_hint">Topic / Story</string>
+    <string name="mood_hint">Mood</string>
+    <string name="key_hint">Musical Key (e.g. Am, C, F#m)</string>
+    <string name="bpm_hint">BPM</string>
+
+    <!-- Editor Screen -->
+    <string name="editor_focus_mode">Focus Mode</string>
+    <string name="editor_exit_focus">Exit Focus</string>
+    <string name="editor_add_section">Add Section</string>
+    <string name="editor_custom_section">Custom Section</string>
+    <string name="editor_section_name">Section Name</string>
+    <string name="editor_bpm">BPM</string>
+    <string name="editor_key">Key</string>
+    <string name="editor_auto_saved">Saved</string>
+    <string name="editor_saving">Saving...</string>
+    <string name="editor_word_count_format">%1$d words • %2$d lines</string>
+    <string name="editor_export">Export</string>
+    <string name="editor_versions">Versions</string>
+    <string name="editor_tools_shortcut">Tools</string>
+    <string name="section_type_intro">Intro</string>
+    <string name="section_type_verse">Verse</string>
+    <string name="section_type_chorus">Chorus</string>
+    <string name="section_type_hook">Hook</string>
+    <string name="section_type_pre_chorus">Pre-Chorus</string>
+    <string name="section_type_bridge">Bridge</string>
+    <string name="section_type_outro">Outro</string>
+    <string name="section_type_poem">Poem</string>
+    <string name="section_type_text">Text</string>
+    <string name="section_type_note">Note</string>
+    <string name="section_type_idea">Idea</string>
+    <string name="section_type_custom">Custom</string>
+
+    <!-- Quick Writing -->
+    <string name="quick_writing_title">Quick Write</string>
+    <string name="quick_writing_hint">Start typing lyrics freely here without distraction...</string>
+    <string name="convert_to_project">Convert to Project</string>
+    <string name="clear">Clear</string>
+
+    <!-- Ideas Screen -->
+    <string name="ideas_title">Ideas</string>
+    <string name="no_ideas_title">No ideas yet</string>
+    <string name="no_ideas_desc">Capture quick melodies, concepts, or rhyme sparks here</string>
+    <string name="add_idea">Add Idea</string>
+    <string name="idea_title_hint">Idea Title</string>
+    <string name="idea_content_hint">Write your idea, rhyme or melodic draft...</string>
+    <string name="category_hint">Category</string>
+
+    <!-- Punchlines Screen -->
+    <string name="punchlines_title">Punchline Treasury</string>
+    <string name="no_punchlines_title">No punchlines yet</string>
+    <string name="no_punchlines_desc">Store your best bars, metaphors, and punchlines</string>
+    <string name="add_punchline">Add Punchline</string>
+    <string name="punchline_hint">Write that knockout line, double entendre, or bar...</string>
+    <string name="copy_to_clipboard">Copy to Clipboard</string>
+    <string name="copied">Copied!</string>
+    <string name="insert_to_project">Insert into Project</string>
+
+    <!-- Word Bank Screen -->
+    <string name="word_bank_title">Word Bank</string>
+    <string name="no_words_title">Word bank is empty</string>
+    <string name="no_words_desc">Collect rich vocabulary, unique rhymes, and phrases</string>
+    <string name="add_word">Add Word</string>
+    <string name="word_hint">Word / Phrase</string>
+    <string name="meaning_hint">Meaning / Notes</string>
+
+    <!-- Tools Hub Screen -->
+    <string name="tools_title">Studio Tools</string>
+    <string name="cat_music">Music &amp; Rhythm</string>
+    <string name="cat_writing">Writing &amp; Rhyme</string>
+    <string name="cat_audio">Voice &amp; Audio</string>
+    <string name="cat_ideas">Inspiration &amp; Ideas</string>
+    <string name="tool_metronome">Metronome &amp; Tap Tempo</string>
+    <string name="tool_rhyme">Offline Rhyme Finder</string>
+    <string name="tool_voice">Voice Memos</string>
+    <string name="tool_punchlines">Punchline Treasury</string>
+    <string name="tool_wordbank">Word Bank</string>
+    <string name="tool_templates">Song Structure Templates</string>
+    <string name="tool_goals">Writing Goals</string>
+    <string name="tool_streak">Streak &amp; Calendar</string>
+
+    <!-- Metronome -->
+    <string name="metronome_title">Metronome</string>
+    <string name="metronome_tap_tempo">Tap Tempo</string>
+    <string name="metronome_start">Start</string>
+    <string name="metronome_stop">Stop</string>
+
+    <!-- Voice Memos -->
+    <string name="voice_memos_title">Voice Memos</string>
+    <string name="record_audio">Record Memo</string>
+    <string name="recording">Recording...</string>
+    <string name="stop_recording">Stop</string>
+    <string name="no_voice_memos">No voice memos recorded yet</string>
+    <string name="permission_needed_audio">Microphone permission is required to record audio memos.</string>
+    <string name="grant_permission">Grant Permission</string>
+
+    <!-- Rhyme Finder -->
+    <string name="rhyme_title">Rhyme Finder</string>
+    <string name="rhyme_search_hint">Enter a word to find rhymes...</string>
+    <string name="rhyme_search_btn">Find Rhymes</string>
+    <string name="no_rhymes_found">No rhymes found</string>
+
+    <!-- Templates -->
+    <string name="templates_title">Templates</string>
+    <string name="template_rap">Rap Track (Intro, 16-Bar Verses, Chorus, Outro)</string>
+    <string name="template_pop">Pop Hit (Verse-PreChorus-Chorus-Bridge)</string>
+    <string name="template_rnb">R&amp;B Soul (Smooth Intro, Hook, Bridges)</string>
+    <string name="template_poetry">Classic Poem (Stanzas, Refrain)</string>
+    <string name="template_freestyle">Freestyle Flow (Continuous Bars)</string>
+    <string name="apply_template">Use Template</string>
+
+    <!-- Goals & Streak -->
+    <string name="goals_title">Writing Goals</string>
+    <string name="streak_title">Writing Streak</string>
+    <string name="calendar_title">Studio Activity Calendar</string>
+    <string name="current_streak_label">Current Streak</string>
+    <string name="best_streak_label">Longest Streak</string>
+    <string name="words_goal">Daily Words Goal</string>
+    <string name="lines_goal">Daily Lines Goal</string>
+    <string name="projects_goal">Monthly Projects Goal</string>
+
+    <!-- Version History -->
+    <string name="version_history_title">Version History</string>
+    <string name="no_versions">No version snapshots saved yet</string>
+    <string name="create_version_snapshot">Take Snapshot</string>
+    <string name="restore_version">Restore This Version</string>
+
+    <!-- Trash -->
+    <string name="trash_title">Trash Bin</string>
+    <string name="trash_empty_btn">Empty Trash</string>
+    <string name="empty_trash">Empty Trash</string>
+    <string name="trash_restore">Restore</string>
+    <string name="restore_project">Restore Project</string>
+    <string name="trash_delete_permanent">Delete Forever</string>
+    <string name="delete_permanently">Delete Permanently</string>
+    <string name="no_trash_items">Trash bin is clean</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_appearance">Appearance &amp; Theme</string>
+    <string name="settings_theme">Studio Theme</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_editor">Editor Preferences</string>
+    <string name="settings_typography">Typography &amp; Editor</string>
+    <string name="font_size">Font Size</string>
+    <string name="line_height">Line Height</string>
+    <string name="settings_font_size">Font Size</string>
+    <string name="settings_line_height">Line Spacing</string>
+    <string name="settings_letter_spacing">Letter Spacing</string>
+    <string name="settings_autosave">Autosave</string>
+    <string name="settings_security">Security &amp; App Lock</string>
+    <string name="settings_app_lock">PIN Code Lock</string>
+    <string name="lock_title">App Lock</string>
+    <string name="lock_enter_pin">Enter your PIN</string>
+    <string name="lock_unlock">Unlock</string>
+    <string name="lock_set_pin">Set PIN</string>
+    <string name="editor_continue_writing">Continue Writing</string>
+    <string name="settings_private_vault">Private Vault</string>
+    <string name="settings_backup">Backup &amp; Data</string>
+    <string name="settings_backup_create">Create Backup (JSON)</string>
+    <string name="settings_backup_restore">Restore from Backup</string>
+    <string name="settings_trash">Trash Bin</string>
+    <string name="settings_about">About Lyric Studio</string>
+    <string name="about_desc">A fully offline, private, and distraction-free luxury songwriting environment created by Seyed Hamid Mousavizadeh.</string>
+
+    <!-- Themes -->
+    <string name="theme_midnight">Midnight Metallic</string>
+    <string name="theme_purple">Purple Night</string>
+    <string name="theme_ocean">Deep Ocean</string>
+    <string name="theme_emerald">Emerald</string>
+    <string name="theme_crimson">Crimson</string>
+    <string name="theme_golden">Golden</string>
+    <string name="theme_neon">Neon</string>
+    <string name="theme_light">Light Studio</string>
+    <string name="theme_charcoal_gold">Charcoal Gold</string>
+    <string name="theme_cyan">Deep Space Cyan</string>
+    <string name="theme_slate">Slate Minimal</string>
+    <string name="theme_amber">Cyberpunk Amber</string>
+    <string name="theme_oled">Pure Black OLED</string>
+
+    <!-- Dialogs & Actions -->
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="warning">Warning</string>
+    <string name="confirm_delete_project">Move this project to trash?</string>
+    <string name="confirm_empty_trash">Permanently delete all items in trash?</string>
+    <string name="confirm_restore_backup">Replace current local database with backup?</string>
+    <string name="enter_pin">Enter 4-Digit PIN</string>
+    <string name="set_pin">Set New PIN</string>
+    <string name="incorrect_pin">Incorrect PIN. Try again.</string>
+    <string name="pin_saved">PIN saved successfully.</string>
+    <string name="vault_locked">Private Vault Locked</string>
+    <string name="unlock">Unlock</string>
+
+    <!-- Content Descriptions (Bilingual Accessibility) -->
+    <string name="cd_back">Navigate back</string>
+    <string name="cd_close">Close</string>
+    <string name="cd_menu">Menu</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_filter">Filter</string>
+    <string name="cd_sort">Sort</string>
+    <string name="cd_add">Add new item</string>
+    <string name="cd_delete">Delete item</string>
+    <string name="cd_edit">Edit item</string>
+    <string name="cd_favorite">Mark as favorite</string>
+    <string name="cd_share">Share lyrics</string>
+    <string name="cd_play">Play</string>
+    <string name="cd_pause">Pause</string>
+    <string name="cd_stop">Stop</string>
+    <string name="cd_record">Record audio</string>
+    <string name="cd_focus_mode">Enter Focus Mode</string>
+    <string name="cd_exit_focus">Exit Focus Mode</string>
+    <string name="cd_app_icon">Lyric Studio App Icon</string>
+    <string name="cd_toggle_grid">Toggle Grid/List view</string>
+</resources>
