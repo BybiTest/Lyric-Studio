@@ -1,9 +1,20 @@
+import java.util.Base64
+
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.google.devtools.ksp)
   alias(libs.plugins.roborazzi)
   alias(libs.plugins.secrets)
+}
+
+val debugKeystoreFile = file("${rootDir}/debug.keystore")
+val base64KeystoreFile = file("${rootDir}/debug.keystore.base64")
+if (!debugKeystoreFile.exists() && base64KeystoreFile.exists()) {
+  try {
+    val decodedBytes = Base64.getDecoder().decode(base64KeystoreFile.readText().trim())
+    debugKeystoreFile.writeBytes(decodedBytes)
+  } catch (_: Exception) {}
 }
 
 android {
