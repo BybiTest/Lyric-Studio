@@ -53,6 +53,8 @@ import kotlinx.coroutines.flow.first
 
 class MainActivity : ComponentActivity() {
 
+    private var isUnlocked by mutableStateOf(false)
+
     override fun attachBaseContext(newBase: Context) {
         val prefs = newBase.getSharedPreferences("app_prefs", MODE_PRIVATE)
         val lang = prefs.getString("language", "fa") ?: "fa"
@@ -67,6 +69,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        isUnlocked = savedInstanceState?.getBoolean("is_unlocked", false) ?: false
         enableEdgeToEdge()
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -82,6 +85,9 @@ class MainActivity : ComponentActivity() {
             val app = LyricStudioApp.instance
             val themeId by app.preferencesManager.themeFlow.collectAsState(initial = "midnight")
             val currentLang by app.preferencesManager.languageFlow.collectAsState(initial = initialLang)
+            val isAppLockEnabled by app.preferencesManager.appLockEnabledFlow.collectAsState(
+                initial = app.preferencesManager.isAppLockEnabledSync()
+            )
             val studioTheme = remember(themeId) { StudioTheme.fromId(themeId) }
 
             LaunchedEffect(currentLang) {
@@ -93,26 +99,26 @@ class MainActivity : ComponentActivity() {
             }
 
             LyricStudioTheme(studioTheme = studioTheme, language = currentLang) {
-                LyricStudioAppRoot()
+                if (isAppLockEnabled && !isUnlocked) {
+                    AppLockScreen(onUnlocked = { isUnlocked = true })
+                } else {
+                    LyricStudioAppRoot()
+                }
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("is_unlocked", isUnlocked)
     }
 }
 
 @Composable
 fun LyricStudioAppRoot() {
-    val app = LyricStudioApp.instance
-    var isAppLocked by remember { mutableStateOf(false) }
     var hasPassedSplash by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        val isLocked = app.preferencesManager.appLockEnabledFlow.first()
-        isAppLocked = isLocked
-    }
-
-    if (isAppLocked) {
-        AppLockScreen(onUnlocked = { isAppLocked = false })
-    } else if (!hasPassedSplash) {
+    if (!hasPassedSplash) {
         SplashScreen(onSplashFinished = { hasPassedSplash = true })
     } else {
         MainNavigationGraph()

@@ -23,6 +23,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import com.example.LyricStudioApp
 import com.example.R
 import com.example.domain.model.StudioTheme
@@ -50,10 +54,16 @@ fun SettingsScreen(
     val currentLang by prefs.languageFlow.collectAsState(initial = "fa")
     val fontSize by prefs.fontSizeFlow.collectAsState(initial = 16f)
     val lineHeight by prefs.lineHeightFlow.collectAsState(initial = 1.5f)
-    val isAppLockEnabled by prefs.appLockEnabledFlow.collectAsState(initial = false)
+    val isAppLockEnabled by prefs.appLockEnabledFlow.collectAsState(initial = prefs.isAppLockEnabledSync())
 
-    var showPinDialog by remember { mutableStateOf(false) }
+    var showSetPinDialog by remember { mutableStateOf(false) }
     var newPinText by remember { mutableStateOf("") }
+    var confirmPinText by remember { mutableStateOf("") }
+    var setPinError by remember { mutableStateOf<String?>(null) }
+
+    var showDisablePinDialog by remember { mutableStateOf(false) }
+    var disablePinInput by remember { mutableStateOf("") }
+    var disablePinError by remember { mutableStateOf<String?>(null) }
 
     val themeList = listOf(
         ThemeOption(StudioTheme.MidnightMetallic, R.string.theme_midnight, Color(0xFF1E88E5)),
@@ -228,11 +238,14 @@ fun SettingsScreen(
                             checked = isAppLockEnabled,
                             onCheckedChange = { enabled ->
                                 if (enabled) {
-                                    showPinDialog = true
+                                    newPinText = ""
+                                    confirmPinText = ""
+                                    setPinError = null
+                                    showSetPinDialog = true
                                 } else {
-                                    scope.launch {
-                                        prefs.setAppLockEnabled(false)
-                                    }
+                                    disablePinInput = ""
+                                    disablePinError = null
+                                    showDisablePinDialog = true
                                 }
                             }
                         )
@@ -301,31 +314,73 @@ fun SettingsScreen(
     }
 
     // Set PIN Dialog
-    if (showPinDialog) {
+    if (showSetPinDialog) {
         AlertDialog(
-            onDismissRequest = { showPinDialog = false },
+            onDismissRequest = { showSetPinDialog = false },
             title = { Text(stringResource(R.string.lock_set_pin)) },
             text = {
-                OutlinedTextField(
-                    value = newPinText,
-                    onValueChange = { if (it.length <= 6) newPinText = it },
-                    label = { Text("رمز ۴ تا ۶ رقمی") },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        "یک رمز ۴ تا ۶ رقمی برای ورود به برنامه تعیین کنید:",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    OutlinedTextField(
+                        value = newPinText,
+                        onValueChange = {
+                            val filtered = it.filter { c -> c.isDigit() }
+                            if (filtered.length <= 6) {
+                                newPinText = filtered
+                                setPinError = null
+                            }
+                        },
+                        label = { Text("رمز جدید (۴ تا ۶ رقم)") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = confirmPinText,
+                        onValueChange = {
+                            val filtered = it.filter { c -> c.isDigit() }
+                            if (filtered.length <= 6) {
+                                confirmPinText = filtered
+                                setPinError = null
+                            }
+                        },
+                        label = { Text("تکرار رمز") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    if (setPinError != null) {
+                        Text(
+                            text = setPinError!!,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
             },
             confirmButton = {
                 Button(
                     onClick = {
-                        if (newPinText.length in 4..6) {
+                        if (newPinText.length !in 4..6) {
+                            setPinError = "طول رمز باید بین ۴ تا ۶ رقم باشد"
+                        } else if (newPinText != confirmPinText) {
+                            setPinError = "تکرار رمز با رمز اصلی مطابقت ندارد"
+                        } else {
                             scope.launch {
                                 prefs.setAppLockPin(newPinText)
+                                prefs.setAppLockEnabled(true)
+                                Toast.makeText(context, "قفل برنامه با موفقیت فعال شد", Toast.LENGTH_SHORT).show()
                             }
-                            showPinDialog = false
+                            showSetPinDialog = false
                             newPinText = ""
-                            Toast.makeText(context, "قفل برنامه فعال شد", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(context, "رمز باید ۴ تا ۶ رقم باشد", Toast.LENGTH_SHORT).show()
+                            confirmPinText = ""
+                            setPinError = null
                         }
                     }
                 ) {
@@ -333,7 +388,72 @@ fun SettingsScreen(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showPinDialog = false }) {
+                TextButton(onClick = { showSetPinDialog = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
+
+    // Disable PIN Dialog (requires current PIN)
+    if (showDisablePinDialog) {
+        AlertDialog(
+            onDismissRequest = { showDisablePinDialog = false },
+            title = { Text("غیرفعال‌سازی قفل برنامه") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        "برای غیرفعال کردن قفل برنامه، لطفاً رمز عبور فعلی را وارد کنید:",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    OutlinedTextField(
+                        value = disablePinInput,
+                        onValueChange = {
+                            val filtered = it.filter { c -> c.isDigit() }
+                            if (filtered.length <= 6) {
+                                disablePinInput = filtered
+                                disablePinError = null
+                            }
+                        },
+                        label = { Text("رمز فعلی") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                        isError = disablePinError != null,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    if (disablePinError != null) {
+                        Text(
+                            text = disablePinError!!,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        scope.launch {
+                            val isCorrect = prefs.verifyPin(disablePinInput) || prefs.verifyPinAsync(disablePinInput)
+                            if (isCorrect) {
+                                prefs.setAppLockEnabled(false)
+                                showDisablePinDialog = false
+                                disablePinInput = ""
+                                disablePinError = null
+                                Toast.makeText(context, "قفل برنامه غیرفعال شد", Toast.LENGTH_SHORT).show()
+                            } else {
+                                disablePinError = "رمز عبور وارد شده نادرست است"
+                            }
+                        }
+                    }
+                ) {
+                    Text("تأیید و غیرفعال‌سازی")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDisablePinDialog = false }) {
                     Text(stringResource(R.string.cancel))
                 }
             }

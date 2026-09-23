@@ -3,6 +3,8 @@ package com.example.ui.screens.lock
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
@@ -13,11 +15,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.LyricStudioApp
 import com.example.R
 import com.example.ui.components.StudioButton
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @Composable
@@ -31,9 +36,14 @@ fun AppLockScreen(
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
     fun checkPin() {
+        if (enteredPin.length < 4) {
+            errorMessage = "لطفاً رمز ۴ تا ۶ رقمی را وارد کنید"
+            return
+        }
         scope.launch {
-            val savedHash = prefs.pinHashFlow.first()
-            if (prefs.hashPin(enteredPin) == savedHash) {
+            val isCorrect = prefs.verifyPin(enteredPin) || prefs.verifyPinAsync(enteredPin)
+            if (isCorrect) {
+                errorMessage = null
                 onUnlocked()
             } else {
                 errorMessage = "رمز وارد شده نادرست است"
@@ -51,11 +61,13 @@ fun AppLockScreen(
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier
+                .padding(24.dp)
+                .fillMaxWidth(0.85f)
         ) {
             Box(
                 modifier = Modifier
-                    .size(70.dp)
+                    .size(72.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center
@@ -89,15 +101,37 @@ fun AppLockScreen(
             OutlinedTextField(
                 value = enteredPin,
                 onValueChange = {
-                    if (it.length <= 6) {
-                        enteredPin = it
+                    val filtered = it.filter { char -> char.isDigit() }
+                    if (filtered.length <= 6) {
+                        enteredPin = filtered
                         errorMessage = null
+                        if (filtered.length >= 4) {
+                            if (prefs.verifyPin(filtered)) {
+                                onUnlocked()
+                            }
+                        }
                     }
                 },
                 singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.NumberPassword,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { checkPin() }
+                ),
                 isError = errorMessage != null,
+                textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+                placeholder = {
+                    Text(
+                        "• • • •",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                },
                 modifier = Modifier
-                    .fillMaxWidth(0.6f)
+                    .fillMaxWidth(0.7f)
                     .testTag("lock_pin_input")
             )
 
@@ -106,7 +140,8 @@ fun AppLockScreen(
                 Text(
                     text = errorMessage!!,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Center
                 )
             }
 
@@ -115,7 +150,7 @@ fun AppLockScreen(
             StudioButton(
                 text = stringResource(R.string.lock_unlock),
                 onClick = { checkPin() },
-                modifier = Modifier.fillMaxWidth(0.6f)
+                modifier = Modifier.fillMaxWidth(0.7f)
             )
         }
     }

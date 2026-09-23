@@ -1,6 +1,9 @@
 package com.example.ui.screens.editor
 
 import android.content.Intent
+import android.widget.Toast
+import androidx.core.content.FileProvider
+import java.io.File
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -295,13 +298,52 @@ fun EditorScreen(
                                 text = stringResource(R.string.editor_export),
                                 onClick = {
                                     val fullLyrics = viewModel.getFullLyricsText()
-                                    val sendIntent = Intent().apply {
-                                        action = Intent.ACTION_SEND
-                                        putExtra(Intent.EXTRA_TEXT, fullLyrics)
-                                        type = "text/plain"
+                                    val projectTitle = state.project?.title ?: "ترانه"
+                                    if (fullLyrics.isBlank()) {
+                                        Toast.makeText(context, "متنی برای خروجی گرفتن وجود ندارد", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        try {
+                                            val safeFileName = projectTitle
+                                                .replace(Regex("[\\\\/:*?\"<>|]"), "_")
+                                                .trim()
+                                                .take(40)
+                                                .ifBlank { "lyrics" } + ".txt"
+
+                                            val exportFile = File(context.cacheDir, safeFileName)
+                                            exportFile.writeText(fullLyrics)
+
+                                            val authority = "${context.packageName}.fileprovider"
+                                            val contentUri = FileProvider.getUriForFile(context, authority, exportFile)
+
+                                            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                                type = "text/plain"
+                                                putExtra(Intent.EXTRA_SUBJECT, projectTitle)
+                                                putExtra(Intent.EXTRA_TEXT, fullLyrics)
+                                                putExtra(Intent.EXTRA_STREAM, contentUri)
+                                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                            }
+                                            val chooser = Intent.createChooser(shareIntent, "خروجی و اشتراک‌گذاری ترانه").apply {
+                                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                            }
+                                            context.startActivity(chooser)
+                                        } catch (e: Exception) {
+                                            try {
+                                                val fallbackIntent = Intent(Intent.ACTION_SEND).apply {
+                                                    type = "text/plain"
+                                                    putExtra(Intent.EXTRA_SUBJECT, projectTitle)
+                                                    putExtra(Intent.EXTRA_TEXT, fullLyrics)
+                                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                                }
+                                                val chooser = Intent.createChooser(fallbackIntent, "اشتراک‌گذاری ترانه").apply {
+                                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                                }
+                                                context.startActivity(chooser)
+                                            } catch (ex: Exception) {
+                                                Toast.makeText(context, "خطا در خروجی گرفتن: ${ex.message}", Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
                                     }
-                                    val shareIntent = Intent.createChooser(sendIntent, null)
-                                    context.startActivity(shareIntent)
                                 },
                                 icon = Icons.Default.Share,
                                 isPrimary = false,
